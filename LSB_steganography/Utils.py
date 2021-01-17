@@ -1,11 +1,5 @@
 import cv2
 import numpy as np
-import types
-
-
-# from google.colab.patches import cv2_imshow #Google colab crashes if you try to display
-
-# image using cv2.imshow() thus use this import
 
 class Utils:
     def __init__(self):
@@ -23,7 +17,7 @@ class Utils:
             raise TypeError("Input type not supported")
 
     @staticmethod
-    def hideData(image, secret_message):
+    def LSB_encoding_method(image, secret_message):
         # calculate the maximum bytes to encode
         n_bytes = image.shape[0] * image.shape[1] * 3 // 8
         print("Maximum bytes to encode:", n_bytes)
@@ -33,7 +27,6 @@ class Utils:
             raise ValueError("Error encountered insufficient bytes, need bigger image or less data !!")
 
         secret_message += "#####"  # you can use any string as the delimeter
-
         data_index = 0
         # convert input data to binary format using messageToBinary() fucntion
         binary_secret_msg = Utils.messageToBinary(secret_message)
@@ -53,7 +46,7 @@ class Utils:
                     pixel[1] = int(g[:-1] + binary_secret_msg[data_index], 2)
                     data_index += 1
                 if data_index < data_len:
-                    # hide the data into least significant bit of  blue pixel
+                    # hide the data into least significant bit of blue pixel
                     pixel[2] = int(b[:-1] + binary_secret_msg[data_index], 2)
                     data_index += 1
                 # if data is encoded, just break out of the loop
@@ -92,18 +85,17 @@ class Utils:
         # It is a library of Python bindings designed to solve computer vision problems.
 
         # details of the image
-        print("The shape of the image is: ",
-              image.shape)  # check the shape of image to calculate the number of bytes in it
+        print("The shape of the image is: ", image.shape)  # check the shape of image to calculate the number of bytes in it
         print("The original image is as shown below: ")
         resized_image = cv2.resize(image, (500, 500))  # resize the image as per your requirement
         cv2.imshow('image', resized_image)
 
-        data = input("Enter data to be encoded : ")
+        data = input("Enter data to be encoded: ")
         if (len(data) == 0):
             raise ValueError('Data is empty')
 
         filename = input("Enter the name of new encoded image(with extension): ")
-        encoded_image = Utils.hideData(image,data)  # call the hideData function to hide the secret message into the selected image
+        encoded_image = Utils.LSB_encoding_method(image,data)  # call the LSB_encoding_method function to hide the secret message into the selected image
         cv2.imwrite(filename, encoded_image)
 
     # Decode the data in the image
