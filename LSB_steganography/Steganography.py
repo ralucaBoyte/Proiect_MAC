@@ -1,23 +1,24 @@
 # Image Steganography
-from LSB_steganography.Utils import Utils
+from LSB_steganography.LSB import LSB
 
 
 class Steganography:
 
     @staticmethod
     def LSB_Steganography():
-        a = input("Image Steganography \n 1. Encode the data \n 2. Decode the data \n Your input is: ")
-        userinput = int(a)
+        a = input("Image Steganography using the LSB algorithm \nPress: \n1. To encode the data \n2. To decode the data \nYour choice: ")
+        userInput = int(a)
+        lsb_steganography = LSB()
 
-        if (userinput == 1):
+        if userInput == 1:
             print("\nEncoding....")
-            Utils.encode_text()
+            lsb_steganography.encode_our_message()
 
-        elif (userinput == 2):
+        elif userInput == 2:
             print("\nDecoding....")
-            print("Decoded message is " + Utils.decode_text())
+            print("Decoded message is " + lsb_steganography.decode_our_message())
         else:
             raise Exception("Enter correct input")
 
 
-Steganography.LSB_Steganography()  # encode image
+Steganography.LSB_Steganography()

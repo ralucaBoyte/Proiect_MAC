@@ -5,17 +5,17 @@ import compression_DCT.zigzag as zz
 import compression_DCT.image_preparation as img
 import compression_DCT.data_embedding as stego
 
-original_image_path = "../pictures/lion_king.png"
-stego_image_path = "../pictures/lion_king_e.png"
-secret_message = "OUR SECRET MESSAGES RIGHT HERE MESSAGE"
+original_image_path = "../pictures/corgis.jpg"
+stego_image_path = "../pictures/corgis_encoded.jpg"
+secret_message = "OUR SECRET MESSAGES RIGHT HERE"
 
 original_image = cv2.imread(original_image_path, flags=cv2.IMREAD_COLOR)
 height, width = original_image.shape[:2]
 
 # PREPARE IMAGE HEIGHT AND WIDTH TO BE DIVIDED INTO 8x8 BLOCKS
-while (height % 8):
+while height % 8:
     height += 1
-while (width % 8):
+while width % 8:
     width += 1
 
 dimensions = (width, height)
@@ -23,6 +23,9 @@ resized_image = cv2.resize(original_image, dimensions)
 original_image_f32 = np.float32(resized_image)
 
 # WE CONVERT COLOUR SPACE FROM RGB TO YCbCr
+# Y - luminance
+# Cb - Blue difference chroma component
+# Cr - Red difference chroma component
 original_image_YCbCr = cv2.cvtColor(original_image_f32, cv2.COLOR_BGR2YCrCb)
 
 # WE CREATE AN YCrCb CLASS WITH height, width and channels attributes AND STORE THE RED, GREEN AND BLUE VALUES FOR OUR PICTURE IN THE channels ATTRIBUTE
@@ -42,7 +45,7 @@ for index in range(3):
     sorted_coefficients = [zz.zigzag(block) for block in dct_quants]
 
     # EMBED DATA INTO LUMINANCE LAYER
-    if (index == 0):
+    if index == 0:
         # DATA INSERTION STAGE
         secret_data = ""
         for char in secret_message.encode('ascii'):
